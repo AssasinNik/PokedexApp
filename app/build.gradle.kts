@@ -75,4 +75,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Coil для загрузки изображений
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+    implementation (libs.accompanist.coil)
 }

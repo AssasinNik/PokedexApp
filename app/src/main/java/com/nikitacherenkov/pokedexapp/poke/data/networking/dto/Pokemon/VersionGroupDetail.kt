@@ -1,5 +1,8 @@
 package com.nikitacherenkov.pokedexapp.poke.data.networking.dto.Pokemon
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class VersionGroupDetail(
     val level_learned_at: Int,
     val move_learn_method: com.nikitacherenkov.pokedexapp.poke.data.networking.dto.Pokemon.MoveLearnMethod,

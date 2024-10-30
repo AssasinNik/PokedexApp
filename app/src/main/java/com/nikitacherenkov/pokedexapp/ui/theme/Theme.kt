@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
-    onPrimary = onPrimaryLight,
-    primaryContainer = primaryContainerLight,
-    onPrimaryContainer = onPrimaryContainerLight,
+    onPrimary = primaryLight,
+    primaryContainer = primaryLight,
+    onPrimaryContainer = primaryLight,
     secondary = secondaryLight,
     onSecondary = onSecondaryLight,
     secondaryContainer = secondaryContainerLight,
@@ -264,8 +264,8 @@ fun PokedexAppTheme(
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
       }
       
-      darkTheme -> darkScheme
-      else -> lightScheme
+      darkTheme -> highContrastDarkColorScheme
+      else -> highContrastDarkColorScheme
   }
 
   MaterialTheme(
