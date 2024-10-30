@@ -1,4 +1,4 @@
-package com.plcoding.cryptotracker.util
+package com.nikitacherenkov.pokedexapp.core.domain.util
 
 typealias DomainError = Error
 
