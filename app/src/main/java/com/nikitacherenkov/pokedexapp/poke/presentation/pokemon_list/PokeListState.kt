@@ -7,5 +7,7 @@ import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
 data class PokeListState(
     val isLoading: Boolean = false,
     val pokemons: List<PokemonInfo> = emptyList(),
-    val selectedPokemon: PokemonInfo? =null
+    val selectedPokemon: PokemonInfo? =null,
+    val offset: Int = 0,
+    val isPaginated: Boolean = false
 )

@@ -18,10 +18,10 @@ import io.ktor.client.request.get
 class RemotePokemonDataSource(
     private val httpClient: HttpClient
 ): PokemonDataSource {
-    override suspend fun getPokemonsList(): Result<List<PokemonElement>, NetworkError> {
+    override suspend fun getPokemonsList(offset: Int): Result<List<PokemonElement>, NetworkError> {
         return safeCall<PokemonList>{
             httpClient.get(
-                urlString = constructURL("/pokemon?limit=10&offset=0")
+                urlString = constructURL("/pokemon?limit=20&offset=$offset")
             )
         }.map { response ->
             response.results.toListPokemonElement()
