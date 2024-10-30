@@ -1,0 +1,41 @@
+package com.nikitacherenkov.pokedexapp.poke.data.networking
+
+import com.nikitacherenkov.pokedexapp.core.data.networking.constructURL
+import com.nikitacherenkov.pokedexapp.core.data.networking.safeCall
+import com.nikitacherenkov.pokedexapp.core.domain.util.NetworkError
+import com.nikitacherenkov.pokedexapp.core.domain.util.Result
+import com.nikitacherenkov.pokedexapp.core.domain.util.map
+import com.nikitacherenkov.pokedexapp.poke.data.mappers.toListPokemonElement
+import com.nikitacherenkov.pokedexapp.poke.data.mappers.toPokemonInfo
+import com.nikitacherenkov.pokedexapp.poke.data.networking.dto.Pokemon.Pokemon
+import com.nikitacherenkov.pokedexapp.poke.domain.PokemonDataSource
+import com.nikitacherenkov.pokedexapp.poke.data.networking.dto.PokemonList.PokemonList
+import com.nikitacherenkov.pokedexapp.poke.domain.PokemonElement
+import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+
+class RemotePokemonDataSource(
+    private val httpClient: HttpClient
+): PokemonDataSource {
+    override suspend fun getPokemonsList(): Result<List<PokemonElement>, NetworkError> {
+        return safeCall<PokemonList>{
+            httpClient.get(
+                urlString = constructURL("/pokemon?limit=100000&offset=0")
+            )
+        }.map { response ->
+            response.results.toListPokemonElement()
+        }
+    }
+
+    override suspend fun getPokemon(name: String): Result<PokemonInfo, NetworkError> {
+        return safeCall<Pokemon>{
+            httpClient.get(
+                urlString = constructURL("pokemon/$name")
+            )
+        }.map { response ->
+            response.toPokemonInfo()
+        }
+    }
+
+}
