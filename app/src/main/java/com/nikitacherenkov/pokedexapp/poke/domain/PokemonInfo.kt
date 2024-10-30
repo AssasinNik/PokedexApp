@@ -1,7 +1,5 @@
 package com.nikitacherenkov.pokedexapp.poke.domain
 
-import com.nikitacherenkov.pokedexapp.poke.data.networking.dto.Pokemon.Ability
-import com.nikitacherenkov.pokedexapp.poke.data.networking.dto.Pokemon.Type
 
 data class PokemonInfo(
     val id: Int,

@@ -28,10 +28,10 @@ class RemotePokemonDataSource(
         }
     }
 
-    override suspend fun getPokemon(name: String): Result<PokemonInfo, NetworkError> {
+    override suspend fun getPokemon(id: String): Result<PokemonInfo, NetworkError> {
         return safeCall<Pokemon>{
             httpClient.get(
-                urlString = constructURL("pokemon/$name")
+                urlString = constructURL("pokemon/$id")
             )
         }.map { response ->
             response.toPokemonInfo()
