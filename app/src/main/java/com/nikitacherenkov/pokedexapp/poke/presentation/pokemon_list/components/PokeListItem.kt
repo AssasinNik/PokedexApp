@@ -32,6 +32,7 @@ import com.nikitacherenkov.pokedexapp.poke.domain.Ability
 import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
 import com.nikitacherenkov.pokedexapp.poke.domain.Type
 import com.nikitacherenkov.pokedexapp.ui.theme.PokedexAppTheme
+import com.nikitacherenkov.pokedexapp.ui.theme.PokemonName
 import kotlinx.coroutines.Dispatchers
 
 @Composable

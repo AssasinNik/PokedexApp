@@ -80,4 +80,6 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.compose)
     implementation (libs.accompanist.coil)
+
+    implementation(libs.androidx.core.splashscreen)
 }

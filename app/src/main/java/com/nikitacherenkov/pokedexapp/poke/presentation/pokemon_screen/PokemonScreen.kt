@@ -27,6 +27,7 @@ import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
 import com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_list.PokeListState
 
 import com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_screen.components.PokemonCard
+import com.nikitacherenkov.pokedexapp.ui.theme.PokemonName
 import kotlinx.coroutines.Dispatchers
 
 @Composable
@@ -64,7 +65,7 @@ fun PokemonScreen(
         ) {
             if (pokemonElement != null) {
                 Text(
-                    text = pokemonElement.name.replaceFirstChar { it.uppercase() },
+                    text = pokemonElement.name.replaceFirstChar { it.uppercase() } + "#" + pokemonElement.id.toString().padStart(3,'0'),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = contentColor

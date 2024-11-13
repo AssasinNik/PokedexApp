@@ -5,4 +5,9 @@
     <string name="no_internet">Couldn\'t connect to server</string>
     <string name="error_unknown">Something went wrong. Please try again later</string>
     <string name="error_serialization">Couldn\'t serialize or deserialize data</string>
+    <string name="overview">Overview</string>
+    <string name="stats">Stats</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="experience">Experience</string>
 </resources>
