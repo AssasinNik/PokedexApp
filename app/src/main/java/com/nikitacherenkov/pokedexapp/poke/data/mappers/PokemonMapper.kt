@@ -5,6 +5,7 @@ import com.nikitacherenkov.pokedexapp.poke.data.networking.dto.PokemonList.Resul
 import com.nikitacherenkov.pokedexapp.poke.domain.Ability
 import com.nikitacherenkov.pokedexapp.poke.domain.PokemonElement
 import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
+import com.nikitacherenkov.pokedexapp.poke.domain.Stat
 import com.nikitacherenkov.pokedexapp.poke.domain.Type
 
 fun List<Result>.toListPokemonElement(): List<PokemonElement> {
@@ -29,6 +30,12 @@ fun Pokemon.toPokemonInfo(): PokemonInfo{
         types = types.map { result ->
             Type(result.type.name)
         },
-        imageUrl = sprites.front_default
+        imageUrl = sprites.front_default,
+        stats = stats.map {
+            Stat(
+                it.base_stat,
+                it.stat.name
+            )
+        }
     )
 }

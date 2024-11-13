@@ -8,6 +8,7 @@ import com.nikitacherenkov.pokedexapp.core.domain.util.onError
 import com.nikitacherenkov.pokedexapp.core.domain.util.onSuccess
 import com.nikitacherenkov.pokedexapp.poke.domain.PokemonDataSource
 import com.nikitacherenkov.pokedexapp.poke.domain.PokemonInfo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +24,12 @@ class PokeListViewModel(
     private val pokeDataSource: PokemonDataSource
 ): ViewModel() {
 
+    init {
+        loadPokemons(0)
+    }
+
     private val _state = MutableStateFlow(PokeListState())
     val state = _state
-        .onStart {
-            loadMorePokemons()
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -40,7 +42,9 @@ class PokeListViewModel(
     fun onAction(action: PokeListAction){
         when(action){
             is PokeListAction.OnPokeClick -> {
-
+                _state.update {
+                    it.copy(selectedPokemon = action.poke)
+                }
             }
         }
     }
@@ -51,18 +55,16 @@ class PokeListViewModel(
         loadPokemons(_state.value.offset)
         _state.update {
             it.copy(
-                offset = it.offset + 20
+                isPaginated = true,
+                offset = it.offset + 10
             )
         }
     }
 
     private fun loadPokemons(offset: Int) {
-        viewModelScope.launch {
-            if(_state.value.offset==0){
+        viewModelScope.launch (context = Dispatchers.IO){
+            if(offset == 0){
                 _state.update { it.copy(isLoading = true) }
-            }
-            else{
-                _state.update { it.copy(isPaginated = true) }
             }
             val pokemonList: MutableList<PokemonInfo> = mutableListOf()
 
@@ -84,8 +86,7 @@ class PokeListViewModel(
                             it.copy(
                                 isLoading = false,
                                 isPaginated = false,
-                                pokemons = it.pokemons + pokemonList,
-                                offset = it.offset + 1
+                                pokemons = it.pokemons + pokemonList
                             )
                         }
                     }

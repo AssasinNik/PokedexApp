@@ -9,7 +9,8 @@ data class PokemonInfo(
     val baseExperience: Int,
     val abilities: List<Ability>,
     val types: List<Type>,
-    val imageUrl: String
+    val imageUrl: String,
+    val stats : List<Stat>
 )
 
 data class Ability(
@@ -18,5 +19,9 @@ data class Ability(
 )
 
 data class Type(
+    val name: String
+)
+data class Stat(
+    val stat: Int,
     val name: String
 )

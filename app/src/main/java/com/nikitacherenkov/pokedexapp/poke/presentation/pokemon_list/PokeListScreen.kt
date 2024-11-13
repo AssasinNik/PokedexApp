@@ -3,8 +3,11 @@ package com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_list
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,10 +36,10 @@ import kotlinx.coroutines.withContext
 fun PokeListScreen(
     state: PokeListState,
     modifier: Modifier = Modifier,
+    onAction: (PokeListAction) -> Unit,
     viewModel: PokeListViewModel
 ){
     val lazyListState = rememberLazyListState()
-
     LaunchedEffect(lazyListState) {
         snapshotFlow { lazyListState.layoutInfo }
             .map { layoutInfo ->
@@ -46,20 +49,20 @@ fun PokeListScreen(
             }
             .distinctUntilChanged()
             .collect { (lastVisibleItem, totalItems) ->
-                if (lastVisibleItem >= totalItems - 1 && !state.isLoading && !state.isPaginated && state.offset !=1300 ) {
+                if (lastVisibleItem == totalItems-1  && !state.isLoading && !state.isPaginated && state.offset != 1300 ) {
                     viewModel.loadMorePokemons()
                 }
             }
     }
-
     if(state.isLoading){
-        Box(
-            modifier = modifier
+        Box (
+            modifier = Modifier
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
             CircularProgressIndicator()
         }
+
     } else{
         LazyColumn(
             state = lazyListState,
@@ -70,12 +73,13 @@ fun PokeListScreen(
             items(state.pokemons){ pokemon ->
                 PokeListItem(
                     pokemonElement = pokemon,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        onAction(PokeListAction.OnPokeClick(pokemon))
+                    },
                     modifier =  Modifier.fillMaxWidth()
                 )
                 HorizontalDivider()
             }
-            // Элемент для индикатора загрузки внизу списка
             item {
                 if (state.isPaginated) {
                     Box(
@@ -86,6 +90,9 @@ fun PokeListScreen(
                     ) {
                         CircularProgressIndicator()
                     }
+                }
+                else{
+                    Spacer(modifier = Modifier.height(10.dp).fillMaxWidth())
                 }
             }
         }

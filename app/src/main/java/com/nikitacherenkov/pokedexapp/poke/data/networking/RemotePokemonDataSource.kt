@@ -21,7 +21,7 @@ class RemotePokemonDataSource(
     override suspend fun getPokemonsList(offset: Int): Result<List<PokemonElement>, NetworkError> {
         return safeCall<PokemonList>{
             httpClient.get(
-                urlString = constructURL("/pokemon?limit=20&offset=$offset")
+                urlString = constructURL("/pokemon?limit=10&offset=$offset")
             )
         }.map { response ->
             response.results.toListPokemonElement()

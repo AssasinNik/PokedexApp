@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nikitacherenkov.pokedexapp.core.navigation.AdaptivePokemonListDetailPane
 import com.nikitacherenkov.pokedexapp.core.presentation.util.ObserveAsEvents
 import com.nikitacherenkov.pokedexapp.core.presentation.util.toString
 import com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_list.PokeListEvent
@@ -37,32 +38,15 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .background(MaterialTheme.colorScheme.background)
                 ) {
                     Scaffold(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .background(MaterialTheme.colorScheme.background)
                     ) { innerPadding ->
-                        val viewModel = koinViewModel<PokeListViewModel>()
-                        val state by viewModel.state.collectAsStateWithLifecycle()
-                        val context = LocalContext.current
-                        ObserveAsEvents(events = viewModel.events) { event ->
-                            when(event){
-                                is PokeListEvent.Error->{
-                                    Toast.makeText(
-                                        context,
-                                        event.error.toString(context),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-
-                        }
-                        PokeListScreen(
-                            state = state,
-                            modifier = Modifier.padding(innerPadding),
-                            viewModel = viewModel
+                        AdaptivePokemonListDetailPane(
+                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }

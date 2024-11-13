@@ -8,6 +8,6 @@ data class PokeListState(
     val isLoading: Boolean = false,
     val pokemons: List<PokemonInfo> = emptyList(),
     val selectedPokemon: PokemonInfo? =null,
-    val offset: Int = 0,
+    val offset: Int = 10,
     val isPaginated: Boolean = false
 )
