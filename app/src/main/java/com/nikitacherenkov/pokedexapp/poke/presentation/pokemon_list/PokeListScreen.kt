@@ -46,7 +46,7 @@ fun PokeListScreen(
             }
             .distinctUntilChanged()
             .collect { (lastVisibleItem, totalItems) ->
-                if (lastVisibleItem >= totalItems - 1 && !state.isLoading && state.offset !=1300 ) {
+                if (lastVisibleItem >= totalItems - 1 && !state.isLoading && !state.isPaginated && state.offset !=1300 ) {
                     viewModel.loadMorePokemons()
                 }
             }
