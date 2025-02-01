@@ -47,7 +47,9 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                     ) { innerPadding ->
+                        val viewModel = koinViewModel<PokeListViewModel>()
                         AdaptivePokemonListDetailPane(
+                            viewModel = viewModel,
                             modifier = Modifier.padding(innerPadding)
                         )
                     }

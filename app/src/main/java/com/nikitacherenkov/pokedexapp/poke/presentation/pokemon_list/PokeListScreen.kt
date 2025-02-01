@@ -1,5 +1,6 @@
 package com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_list
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,6 +50,7 @@ fun PokeListScreen(
             }
             .distinctUntilChanged()
             .collect { (lastVisibleItem, totalItems) ->
+                Log.d("problem", "$state")
                 if (lastVisibleItem == totalItems-1  && !state.isLoading && !state.isPaginated && state.offset != 1300 ) {
                     viewModel.loadMorePokemons()
                 }

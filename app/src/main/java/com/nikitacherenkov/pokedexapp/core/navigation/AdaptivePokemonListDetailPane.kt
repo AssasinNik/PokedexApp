@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nikitacherenkov.pokedexapp.core.presentation.util.ObserveAsEvents
 import com.nikitacherenkov.pokedexapp.core.presentation.util.toString
 import com.nikitacherenkov.pokedexapp.poke.presentation.pokemon_list.PokeListAction
@@ -26,7 +27,7 @@ fun AdaptivePokemonListDetailPane(
     modifier: Modifier = Modifier,
     viewModel: PokeListViewModel = koinViewModel()
 ){
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     ObserveAsEvents(events = viewModel.events) { event ->
         when(event){
