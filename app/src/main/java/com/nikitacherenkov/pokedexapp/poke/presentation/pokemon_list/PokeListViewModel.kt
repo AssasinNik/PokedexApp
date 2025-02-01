@@ -19,6 +19,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class PokeListViewModel(
@@ -28,7 +29,7 @@ class PokeListViewModel(
     private val _state = MutableStateFlow(PokeListState())
     val state = _state
         .onStart {
-            loadPokemons(_state.value.offset)
+            loadPokemons(0)
         }
         .stateIn(
             viewModelScope,
@@ -50,7 +51,7 @@ class PokeListViewModel(
     }
 
     fun loadMorePokemons() {
-        val currentOffset = _state.value.offset + 10
+        val currentOffset = _state.value.offset
         _state.update {
             it.copy(
                 isPaginated = true,
@@ -61,11 +62,11 @@ class PokeListViewModel(
     }
 
     private fun loadPokemons(offset: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (offset == 0) {
-                _state.update { it.copy(isLoading = true, isPaginated = false) }
+                _state.update { it.copy(isLoading = true) }
             } else {
-                _state.update { it.copy(isPaginated = true, isLoading = false) }
+                _state.update { it.copy(isPaginated = true) }
             }
 
             val pokemonList = mutableListOf<PokemonInfo>()
@@ -93,14 +94,26 @@ class PokeListViewModel(
                             _events.send(PokeListEvent.Error(error))
                         }
                     }
-
                     if (pokemonList.isNotEmpty()) {
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                isPaginated = false,
-                                pokemons = it.pokemons + pokemonList
-                            )
+                        if(offset==0){
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    isPaginated = false,
+                                    offset = it.offset + 10,
+                                    pokemons = it.pokemons + pokemonList
+                                )
+                            }
+                        }
+                        else{
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    isPaginated = false,
+                                    offset = it.offset,
+                                    pokemons = it.pokemons + pokemonList
+                                )
+                            }
                         }
                     } else {
                         _state.update { it.copy(isLoading = false, isPaginated = false) }

@@ -17,6 +17,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,15 +34,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-
 @Composable
 fun PokeListScreen(
     state: PokeListState,
     modifier: Modifier = Modifier,
     onAction: (PokeListAction) -> Unit,
     viewModel: PokeListViewModel
-){
+) {
     val lazyListState = rememberLazyListState()
+    val currentState by rememberUpdatedState(newValue = state)
+    val paginationThreshold = 3
+
     LaunchedEffect(lazyListState) {
         snapshotFlow { lazyListState.layoutInfo }
             .map { layoutInfo ->
@@ -50,35 +54,34 @@ fun PokeListScreen(
             }
             .distinctUntilChanged()
             .collect { (lastVisibleItem, totalItems) ->
-                Log.d("problem", "$state")
-                if (lastVisibleItem == totalItems-1  && !state.isLoading && !state.isPaginated && state.offset != 1300 ) {
+                if (lastVisibleItem >= totalItems - paginationThreshold &&
+                    !currentState.isLoading &&
+                    !currentState.isPaginated &&
+                    currentState.offset != 1300 && currentState.offset != 0
+                ) {
                     viewModel.loadMorePokemons()
                 }
             }
     }
-    if(state.isLoading){
-        Box (
-            modifier = Modifier
-                .fillMaxSize(),
+
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             CircularProgressIndicator()
         }
-
-    } else{
+    } else {
         LazyColumn(
             state = lazyListState,
-            modifier = modifier
-                .fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(state.pokemons){ pokemon ->
+            items(state.pokemons) { pokemon ->
                 PokeListItem(
                     pokemonElement = pokemon,
-                    onClick = {
-                        onAction(PokeListAction.OnPokeClick(pokemon))
-                    },
-                    modifier =  Modifier.fillMaxWidth()
+                    onClick = { onAction(PokeListAction.OnPokeClick(pokemon)) },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 HorizontalDivider()
             }
@@ -92,9 +95,12 @@ fun PokeListScreen(
                     ) {
                         CircularProgressIndicator()
                     }
-                }
-                else{
-                    Spacer(modifier = Modifier.height(10.dp).fillMaxWidth())
+                } else {
+                    Spacer(
+                        modifier = Modifier
+                            .height(10.dp)
+                            .fillMaxWidth()
+                    )
                 }
             }
         }
